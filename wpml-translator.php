@@ -13,7 +13,7 @@ use ErrorException;
  *               _/ |      
  *              |__/   
  *
- * Version: 2.2.10
+ * Version: 2.3.10
  * Plugin Name: Code IT - WPML Auto translate posts
  * Plugin URI: https://codeit.ninja
  * Description: Auto translate post when publishing a new posts using DEEPL 🥷
