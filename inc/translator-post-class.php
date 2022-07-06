@@ -37,6 +37,13 @@ class Code_IT_WPML_Post {
         $this->post_meta = get_post_custom( $this->post->ID );
 
         array_walk($this->translate, fn($v, $k) => $this->translate[$k] = $this->post->{$k});
+
+        /**
+         * Remove empty array entries to prevent DeepL throwing
+         *
+         * Uncaught DeepL\DeepLException: texts parameter must be a non-empty string or array of non-empty strings
+         */
+        $this->translate = array_filter( $this->translate );
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace codeit\WPML_Translator;
 
+use DeepL\DeepLException;
 use \DeepL\Translator;
 use ErrorException;
 /**
@@ -70,7 +71,7 @@ class Code_IT_Translator_Deepl {
      * 
      * @return Translator|null
      */
-    public static function deepl() 
+    public static function deepl(): ?Translator
     {
         if( static::no_api_key() ) {
             return null;
@@ -91,10 +92,11 @@ class Code_IT_Translator_Deepl {
 
     /**
      * Check if DeepL supports given target language
-     * 
+     *
      * @return bool
+     * @throws ErrorException|DeepLException
      */
-    public static function is_language_supported( string $language_code )
+    public static function is_language_supported( string $language_code ): bool
     {
         if( static::no_api_key() ) {
             throw new ErrorException('No API key available', 500);
@@ -111,9 +113,9 @@ class Code_IT_Translator_Deepl {
                 return true;
             case $language_code === 'zh-hans' :
                 return true;
-            case $language_code === 'zh-hant' : 
+            case $language_code === 'zh-hant' :
                 return false;
-            default : 
+            default :
                 return false;
         }
     }

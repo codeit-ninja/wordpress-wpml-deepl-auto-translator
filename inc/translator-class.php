@@ -26,7 +26,7 @@ class Code_IT_WPML_Translator
      * 
      * @var WP_Term|WP_Post
      */
-    protected $object;
+    protected WP_Post|WP_Term $object;
     /**
      * Code IT Translator settings
      * 
@@ -85,14 +85,14 @@ class Code_IT_WPML_Translator
      * 
      * @param WP_Term|WP_Post $object
      */
-    function __construct( $object )
+    function __construct( WP_Term|WP_Post $object )
     {
         global $sitepress;
 
         $this->object = $object;
 
         /**
-         * When somehow we recieved no WP_Term or WP_Post object
+         * When somehow we received no WP_Term or WP_Post object
          * return to prevent code errors being spitted out
          */
         if( ! $object instanceof WP_Term && ! $object instanceof WP_Post ) {

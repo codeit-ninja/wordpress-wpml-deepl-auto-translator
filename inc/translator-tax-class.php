@@ -37,6 +37,11 @@ class Code_IT_WPML_Taxonomy {
 
         array_walk($this->translate, fn($v, $k) => $this->translate[$k] = $this->term->{$k});
 
+        /**
+         * Remove empty array entries to prevent DeepL throwing
+         *
+         * Uncaught DeepL\DeepLException: texts parameter must be a non-empty string or array of non-empty strings
+         */
         $this->translate = array_filter( $this->translate );
     }
 

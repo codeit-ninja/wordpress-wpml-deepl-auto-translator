@@ -21,7 +21,7 @@ use ErrorException;
  * Author URI: https://codeit.ninja
  * Update URI: https://github.com/codeit-ninja/wordpress-wpml-deepl-auto-translator
  * 
- * You are not allowed to sell or distrubute this plugin without
+ * You are not allowed to sell or distribute this plugin without
  * the permission of its author
  * 
  * You can contact the author of this plugin at richard@codeit.ninja
@@ -183,7 +183,7 @@ class Code_IT_Translator {
     }
 
     /**
-     * @throws ErrorException
+     * @throws ErrorException|DeepLException
      */
     public static function set_checkbox_label(array $args ): string
     {
@@ -203,7 +203,7 @@ class Code_IT_Translator {
     }
 
     /**
-     * @throws ErrorException
+     * @throws ErrorException|DeepLException
      */
     public static function set_checkbox_state(array $args ): string
     {
