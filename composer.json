@@ -1,0 +1,36 @@
+{
+    "version": "2.1.10",
+    "name": "codeit/wpml-auto-translator",
+    "slug": "codeit-wpml-auto-translator-master",
+    "description": "Auto translates WordPress posts and terms",
+    "type": "library",
+    "license": "GPL-2.0",
+    "minimum-stability": "stable",
+    "require": {
+        "deeplcom/deepl-php": "^0.4.0"
+    },
+    "autoload": {
+        "files": [
+            "./functions.php",
+            "inc/translator-class.php",
+            "inc/translator-tax-class.php",
+            "inc/translator-post-class.php",
+            "inc/translator-updater-class.php",
+            "inc/translator-deepl-class.php",
+            "inc/translator-options-class.php"
+        ]
+    },
+    "author": "<a href='https://codeit.ninja'>Richard Mauritz</a>",
+    "download_url": "https://github.com/codeit-ninja/wordpress-wpml-deepl-auto-translator/archive/refs/heads/master.zip",
+    "last_updated": "2021-01-30 02:10:00",
+    "requires": "5.8",
+    "tested": "6.0",
+    "requires_php": "8.0",
+    "sections": {
+        "changelog": "<h4>1.0 –  28 june 2021</h4><ul><li>Bug fixes.</li><li>Initital release.</li></ul>"
+    },
+    "banners": {
+        "low": "https://rudrastyh.com/wp-content/uploads/updater/banner-772x250.jpg",
+        "high": "https://rudrastyh.com/wp-content/uploads/updater/banner-1544x500.jpg"
+    }
+}
