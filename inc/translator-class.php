@@ -26,7 +26,7 @@ class Code_IT_WPML_Translator
      * 
      * @var WP_Term|WP_Post
      */
-    protected WP_Post|WP_Term $object;
+    protected $object;
     /**
      * Code IT Translator settings
      * 
@@ -85,7 +85,7 @@ class Code_IT_WPML_Translator
      * 
      * @param WP_Term|WP_Post $object
      */
-    function __construct( WP_Term|WP_Post $object )
+    function __construct( $object )
     {
         global $sitepress;
 
@@ -236,25 +236,25 @@ class Code_IT_WPML_Translator
         return new Code_IT_WPML_Translator( get_term( $term_id ) );
     }
 
-    public static function create_post_translation_job( int $post_id, WP_Post $post ): Code_IT_WPML_Translator|false
+    public static function create_post_translation_job( int $post_id, WP_Post $post ): ?Code_IT_WPML_Translator
     {
         global $post;
 
         if (is_null($post)) {
-            return false;
+            return null;
         }
 
         // Don't save for auto save
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-            return false;
+            return null;
         }
 
         // Don't save for revisions
         if ( isset( $post->post_type ) && $post->post_type == 'revision' ) {
-            return false;
+            return null;
         }
 
-        if( isset( $post->post_status ) && $post->post_status !== 'publish' ) return false;
+        if( isset( $post->post_status ) && $post->post_status !== 'publish' ) return null;
 
         return new Code_IT_WPML_Translator( $post );
     }

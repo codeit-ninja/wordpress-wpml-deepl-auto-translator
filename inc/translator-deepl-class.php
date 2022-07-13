@@ -53,7 +53,7 @@ class Code_IT_Translator_Deepl {
      * 
      * @return Code_IT_Translator_Deepl|null
      */
-    public static function get_instance(): Code_IT_Translator_Deepl|null
+    public static function get_instance(): Code_IT_Translator_Deepl
     {
         $cls = static::class;
 

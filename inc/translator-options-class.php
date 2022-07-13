@@ -20,13 +20,13 @@ class Code_IT_Translator_Options {
      * 
      * @var string
      */
-    protected static $plugin_name = 'codeit-wpml-auto-translate';
+    protected static string $plugin_name = 'codeit-wpml-auto-translate';
     /**
      * Name of the options page
      * 
      * @var string
      */
-    protected static $options_page = 'translator';
+    protected static string $options_page = 'translator';
     /**
      * Array of option section fields
      * 
@@ -86,7 +86,7 @@ class Code_IT_Translator_Options {
         );
     }
 
-    public function add_section( string $id, string $title, string $description = '' ) 
+    public function add_section( string $id, string $title, string $description = '' ): Code_IT_Translator_Options
     {
         $this->sections[$id] = [
             'title'     => $title,
@@ -96,7 +96,7 @@ class Code_IT_Translator_Options {
         return $this;
     }
 
-    public function add_field( string $id, string $title, string $type = 'text', string $section = 'default', array $args = array() ) 
+    public function add_field( string $id, string $title, string $type = 'text', string $section = 'default', array $args = array() ): Code_IT_Translator_Options
     {
         /**
          * Prevent overriding `id` field
@@ -157,7 +157,7 @@ class Code_IT_Translator_Options {
         return $this->options[$section];
     }
 
-    public static function get_option( string $key, string $section = null ) : string|null
+    public static function get_option( string $key, string $section = null ) : ?string
     {
         if( $section ) {
             return get_option(static::$plugin_name . '-settings')[$section][$key] ?? null;

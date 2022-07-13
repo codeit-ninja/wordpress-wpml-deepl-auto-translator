@@ -26,13 +26,36 @@ class Code_IT_WPML_Taxonomy {
     ];
 
     /**
+     * @var WP_Term|int
+     */
+    protected $term;
+
+    /**
+     * @var string
+     */
+    protected string $source_lang;
+
+    /**
+     * @var string
+     */
+    protected string $target_lang;
+
+    /**
+     * @var string
+     */
+    protected string $wpml_lang_code;
+
+    /**
      * @param WP_Term|int   $term               - WP_Term object or term ID
      * @param string        $source_lang        - DeepL source language code
      * @param string        $target_lang        - DeepL target language code
      * @param string        $wpml_lang_code     - Should be lowercase
      */
-    public function __construct(protected WP_Term|int $term, protected string $source_lang, protected string $target_lang, protected string $wpml_lang_code)
+    public function __construct($term, string $source_lang, string $target_lang, string $wpml_lang_code)
     {
+        $this->wpml_lang_code = $wpml_lang_code;
+        $this->target_lang = $target_lang;
+        $this->source_lang = $source_lang;
         $this->term = get_term( $term );
 
         array_walk($this->translate, fn($v, $k) => $this->translate[$k] = $this->term->{$k});
@@ -53,7 +76,7 @@ class Code_IT_WPML_Taxonomy {
      * @throws DeepLException
      * @return WP_Error|array
      */
-    public function translate(): WP_Error|array
+    public function translate()
     {
         $translated = Code_IT_Translator_Deepl::deepl()->translateText( $this->translate, $this->source_lang, $this->target_lang);
 

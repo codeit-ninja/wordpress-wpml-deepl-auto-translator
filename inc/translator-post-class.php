@@ -17,7 +17,7 @@ use WP_Post;
  * @package CodeIT\WPML_Translator
  */
 class Code_IT_WPML_Post {
-    protected mixed $post_meta;
+    protected $post_meta;
 
     protected array $translate = [
         'post_content' => '',
@@ -26,13 +26,36 @@ class Code_IT_WPML_Post {
     ];
 
     /**
+     * @var string
+     */
+    protected string $target_lang;
+
+    /**
+     * @var string
+     */
+    protected string $source_lang;
+
+    /**
+     * @var WP_Post|int
+     */
+    protected $post;
+
+    /**
+     * @var string
+     */
+    protected string $wpml_lang_code;
+
+    /**
      * @param WP_Post|int   $post               - WP_Post object or post ID
      * @param string        $source_lang        - DeepL source language code
      * @param string        $target_lang        - DeepL target language code
      * @param string        $wpml_lang_code     - Should be lowercase
      */
-    public function __construct(protected WP_Post|int $post, protected string $source_lang, protected string $target_lang, protected string $wpml_lang_code)
+    public function __construct( $post, string $source_lang, string $target_lang, string $wpml_lang_code)
     {
+        $this->wpml_lang_code = $wpml_lang_code;
+        $this->source_lang = $source_lang;
+        $this->target_lang = $target_lang;
         $this->post = get_post( $post );
         $this->post_meta = get_post_custom( $this->post->ID );
 
@@ -54,7 +77,7 @@ class Code_IT_WPML_Post {
      * @throws DeepLException
      * @return WP_Error|int
      */
-    public function translate(): WP_Error|int
+    public function translate()
     {
         $translated = Code_IT_Translator_Deepl::deepl()->translateText( $this->translate, $this->source_lang, $this->target_lang,
             array(

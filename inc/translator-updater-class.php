@@ -20,19 +20,19 @@ class Translator_Updater
      * 
      * @var string
      */
-    public $plugin_slug;
+    public string $plugin_slug;
     /**
      * Transient cache key
      * 
      * @var string
      */
-    public $cache_key;
+    public string $cache_key;
     /**
      * Whether we should cache
      * 
      * @var bool
      */
-    public $cache_allowed;
+    public bool $cache_allowed;
 
     public function __construct() 
     {
@@ -88,9 +88,7 @@ class Translator_Updater
 
         }
 
-        $remote = json_decode( wp_remote_retrieve_body( $remote ) );
-
-        return $remote;
+        return json_decode( wp_remote_retrieve_body( $remote ) );
     }
 
     function plugin_info( $res, $action, $args )
@@ -168,8 +166,8 @@ class Translator_Updater
         return $transient;
     }
 
-    public function purge( $upgrader, $options ){
-
+    public function purge( $upgrader, $options )
+    {
         if (
             $this->cache_allowed
             && 'update' === $options['action']
