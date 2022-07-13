@@ -25,7 +25,7 @@
     "last_updated": "2021-01-30 02:10:00",
     "requires": "5.8",
     "tested": "6.0",
-    "requires_php": "8.0",
+    "requires_php": "7.4",
     "sections": {
         "changelog": "<h4>1.0 –  28 june 2021</h4><ul><li>Bug fixes.</li><li>Initital release.</li></ul>"
     },
