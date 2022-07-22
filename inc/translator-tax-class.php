@@ -58,7 +58,16 @@ class Code_IT_WPML_Taxonomy {
         $this->source_lang = $source_lang;
         $this->term = get_term( $term );
 
-        array_walk($this->translate, fn($v, $k) => $this->translate[$k] = $this->term->{$k});
+        array_walk($this->translate, function($v, $k) {
+            /**
+             * Somehow DeepL translates lowercase words better
+             * than its uppercase variant, we can use this to get better
+             * translations of the Dutch language and fix duplicate slugs.
+             *
+             * @since v3.4.10
+             */
+            $this->translate[$k] = strtolower( $this->term->{$k} );
+        });
 
         /**
          * Remove empty array entries to prevent DeepL throwing
@@ -71,7 +80,7 @@ class Code_IT_WPML_Taxonomy {
     /**
      * Start translation job of the term
      *
-     * Returns `WP_Error` when failed, otherwise newly created term data array
+     * Returns `WP_Error` when failed, false if term exists, newly created term data array otherwise
      *
      * @throws DeepLException
      * @return WP_Error|array
@@ -82,10 +91,10 @@ class Code_IT_WPML_Taxonomy {
 
         $this->translate = array_combine( array_keys($this->translate), array_map( fn($t) => $t->text, $translated) );
 
-        return wp_insert_term($this->translate['name'] ?? $this->term->name, $this->term->taxonomy, array(
+        return wp_insert_term(ucfirst( $this->translate['name'] ) ?? $this->term->name, $this->term->taxonomy, array(
             'parent'        => $this->term->parent,
             'description'   => $this->translate['description'],
-            'slug' => codeit_unique_term_slug( $this->translate['name'], $this->term->taxonomy )
+            'slug'          => apply_filters( 'codeit_generate_unique_term_slug', $this->translate['name'], $this->term->taxonomy )
         ));
     }
 }

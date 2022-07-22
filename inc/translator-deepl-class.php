@@ -4,6 +4,8 @@ namespace codeit\WPML_Translator;
 use DeepL\DeepLException;
 use \DeepL\Translator;
 use ErrorException;
+use Exception;
+
 /**
  *         _       _       
  *        (_)     (_)      
@@ -22,15 +24,18 @@ class Code_IT_Translator_Deepl {
      * 
      * @var Code_IT_Translator_Deepl[]
      */
-    private static $instances = [];
+    private static array $instances = [];
     /**
      * DeepL instance
      * 
      * @var Translator
      */
-    protected $deepl;
+    protected Translator $deepl;
 
-    protected function __construct() 
+    /**
+     * @throws DeepLException
+     */
+    protected function __construct()
     {
         $this->deepl = new Translator( Code_IT_Translator_Options::get_option('api-key', 'global-settings') );
     }
@@ -42,10 +47,11 @@ class Code_IT_Translator_Deepl {
 
     /**
      * Singletons should not be restorable from strings.
+     * @throws Exception
      */
     public function __wakeup()
     {
-        throw new \Exception("Cannot unserialize a singleton.");
+        throw new Exception("Cannot unserialize a singleton.");
     }
 
     /**
@@ -81,11 +87,11 @@ class Code_IT_Translator_Deepl {
     }
 
     /**
-     * Check if we have a API key available
+     * Check if we have an API key available
      * 
      * @return bool
      */
-    public static function no_api_key() 
+    public static function no_api_key(): bool
     {
         return ! Code_IT_Translator_Options::get_option('api-key', 'global-settings');
     }
@@ -93,8 +99,10 @@ class Code_IT_Translator_Deepl {
     /**
      * Check if DeepL supports given target language
      *
+     * @param string $language_code
      * @return bool
-     * @throws ErrorException|DeepLException
+     * @throws DeepLException
+     * @throws ErrorException
      */
     public static function is_language_supported( string $language_code ): bool
     {
@@ -109,12 +117,9 @@ class Code_IT_Translator_Deepl {
         $supported_languages = static::deepl()->getTargetLanguages();
 
         switch( $supported_languages ) {
+            case $language_code === 'zh-hans':
             case !!array_filter( $supported_languages, fn ( \DeepL\Language $lang ) => $language_code === strtolower( $lang->code ) || str_contains( strtolower( $lang->code ), $language_code ) ) :
                 return true;
-            case $language_code === 'zh-hans' :
-                return true;
-            case $language_code === 'zh-hant' :
-                return false;
             default :
                 return false;
         }

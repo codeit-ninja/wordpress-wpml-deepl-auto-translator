@@ -89,24 +89,6 @@ class Code_IT_Translator {
             return;
         }
         /**
-         * Set text of checkbox label 
-         * 
-         * Show a 'not supported' label on settings page 
-         * when language is not supported by DeepL
-         * 
-         * @since v1.0.1
-         */
-        add_filter( 'codeit_checkbox_label', array( static::class, 'set_checkbox_label' ));
-        /**
-         * Set text of checkbox state
-         * 
-         * Disable checkbox on settings page when 
-         * language is not supported by DeepL
-         * 
-         * @since v1.0.1
-         */
-        add_filter( 'codeit_checkbox_state', array( static::class, 'set_checkbox_state' ));
-        /**
          * Check if WPML is installed, if not show an error message
          */
         if ( ! in_array( 'sitepress-multilingual-cms/sitepress.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
@@ -136,6 +118,7 @@ class Code_IT_Translator {
             return;
         }
 
+        new Code_IT_Translator_Filters();
         new Code_IT_Translator();
         new Translator_Updater();
     }
@@ -180,42 +163,6 @@ class Code_IT_Translator {
         $message = __( 'You have reached the API limits of DeepL, we are not able anymore to automatically translate your content. Find out more about the limits by clicking <a target="_blank" href="https://www.deepl.com/pro?cta=header-prices">here</a>.' );
     
         printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message );
-    }
-
-    /**
-     * @throws ErrorException|DeepLException
-     */
-    public static function set_checkbox_label(array $args ): string
-    {
-        if( Code_IT_Translator_Deepl::no_api_key() && $args['id'] === 'enabled' ) {
-            return '<span style="color: red;"> Setup your DeepL API key first</span>';
-        }
-
-        if( ! Code_IT_Translator_Deepl::deepl() ) {
-            return '';
-        }
-
-        if( isset( $args['code'] ) && $args['code'] ) {
-            return Code_IT_Translator_Deepl::is_language_supported( $args['code'] ) ? '' : '<span style="color: red;"> Not supported by DeepL</span>';
-        }
-
-        return '';
-    }
-
-    /**
-     * @throws ErrorException|DeepLException
-     */
-    public static function set_checkbox_state(array $args ): string
-    {
-        if( ! Code_IT_Translator_Deepl::deepl() ) {
-            return 'disabled';
-        }
-
-        if( isset( $args['code'] ) && $args['code'] ) {
-            return Code_IT_Translator_Deepl::is_language_supported( $args['code'] ) ? '' : 'disabled';
-        }
-
-        return '';
     }
 }
 

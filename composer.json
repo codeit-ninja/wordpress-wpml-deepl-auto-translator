@@ -13,6 +13,7 @@
         "files": [
             "./functions.php",
             "inc/translator-class.php",
+            "inc/translator-filters-class.php",
             "inc/translator-tax-class.php",
             "inc/translator-post-class.php",
             "inc/translator-updater-class.php",

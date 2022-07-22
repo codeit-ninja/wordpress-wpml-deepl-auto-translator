@@ -89,14 +89,14 @@ class Code_IT_WPML_Post {
             'post_status'   => 'publish',
             'post_type'     => 'post',
             'tax_input'     => array(
-                'category'  => codeit_get_post_terms_translation_ids( $this->post->ID, 'category', $this->wpml_lang_code ),
-                'post_tag'  => codeit_get_post_terms_translation_ids( $this->post->ID, 'post_tag', $this->wpml_lang_code )
+                'category'  => apply_filters( 'codeit_get_term_ids', $this->post->ID, 'category', $this->wpml_lang_code ),
+                'post_tag'  => apply_filters( 'codeit_get_term_ids', $this->post->ID, 'post_tag', $this->wpml_lang_code )
             )
         );
 
         $this->translate = array_combine( array_keys($this->translate), array_map( fn($t) => $t->text, $translated) );
 
-        $post_ID =  wp_insert_post( array_merge($this->translate, $post), false, false );
+        $post_ID =  wp_insert_post( array_merge($this->translate, $post), true, false );
 
         /**
          * Copy post meta over to translated post
