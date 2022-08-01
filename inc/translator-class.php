@@ -74,6 +74,13 @@ class Code_IT_WPML_Translator
     protected stdClass $language_info;
 
     /**
+     * Source language of element
+     *
+     * @var string
+     */
+    protected string $source_language;
+
+    /**
      * Target translate language
      * 
      * @var string
@@ -144,7 +151,7 @@ class Code_IT_WPML_Translator
      * Start translation job of WordPress term
      *
      * @throws ErrorException|DeepLException
-     * @property string $language_code
+     * @property string $language_code  - Target language code
      */
     protected function translate( string $language_code ): void
     {
@@ -167,8 +174,12 @@ class Code_IT_WPML_Translator
         if( $this->language_args['source_language_code'] === $language_code ) return;
 
         // Specify specifically in case of Chinese and English languages
+        // For both source and target languages
+        // We rename the languages codes to make them compatible with DeepL
         if( $language_code === 'zh-hans' ) $this->target_language = 'ZH';
         if( $language_code === 'en' ) $this->target_language = 'EN-GB';
+        if( $this->language_info->language_code === 'zh-hans' ) $this->source_language = 'ZH';
+        if( $this->language_info->language_code === 'en' ) $this->source_language = 'EN';
         
         if( $this->object instanceof WP_Term ) {
             $array_or_post_id = $this->translate_term()->translate();
@@ -201,7 +212,7 @@ class Code_IT_WPML_Translator
      */
     protected function translate_term(): Code_IT_WPML_Taxonomy
     {
-        return new Code_IT_WPML_Taxonomy( $this->object->term_taxonomy_id, $this->language_info->language_code, $this->target_language, $this->language_args['language_code'] );
+        return new Code_IT_WPML_Taxonomy( $this->object->term_taxonomy_id, $this->source_language, $this->target_language, $this->language_args['language_code'] );
     }
 
     /**
@@ -213,7 +224,7 @@ class Code_IT_WPML_Translator
      */
     protected function translate_post(): Code_IT_WPML_Post
     {
-        return new Code_IT_WPML_Post( $this->object->ID, $this->language_info->language_code, $this->target_language, $this->language_args['language_code'] );
+        return new Code_IT_WPML_Post( $this->object->ID, $this->source_language, $this->target_language, $this->language_args['language_code'] );
     }
 
     protected function fill(): void
