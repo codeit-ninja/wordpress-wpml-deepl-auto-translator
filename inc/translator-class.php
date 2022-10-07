@@ -165,6 +165,7 @@ class Code_IT_WPML_Translator
 
         $this->language_args['language_code'] = $language_code;
         $this->target_language = strtoupper( $language_code );
+        $this->source_language = strtoupper( $this->language_args['source_language_code'] );
 
         // IDK how to handle non-supported languages as for now
         // Just skip and continue to next language
@@ -249,9 +250,11 @@ class Code_IT_WPML_Translator
 
     public static function create_post_translation_job( int $post_id, WP_Post $post ): ?Code_IT_WPML_Translator
     {
-        global $post;
-
         if (is_null($post)) {
+            return null;
+        }
+
+        if ( wp_is_post_revision( $post ) ) {
             return null;
         }
 
@@ -261,11 +264,13 @@ class Code_IT_WPML_Translator
         }
 
         // Don't save for revisions
-        if ( isset( $post->post_type ) && $post->post_type == 'revision' ) {
+        if ( isset( $post->post_type ) && $post->post_type === 'revision' ) {
             return null;
         }
 
-        if( isset( $post->post_status ) && $post->post_status !== 'publish' ) return null;
+        if( isset( $post->post_status ) && $post->post_status !== 'publish' ) {
+            return null;
+        }
 
         return new Code_IT_WPML_Translator( $post );
     }
