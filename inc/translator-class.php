@@ -71,7 +71,7 @@ class Code_IT_WPML_Translator
      * 
      * @see https://wpml.org/wpml-hook/wpml_element_language_details/
      */
-    protected stdClass $language_info;
+    protected $language_info;
 
     /**
      * Source language of element
@@ -116,21 +116,15 @@ class Code_IT_WPML_Translator
         /**
          * Fill properties needed by translator
          */
-        $this->fill();
+        if( ! $this->fill() ) return;
         /**
-         * Remove `create_term` action created by plugin
-         * to prevent creating duplicate terms
+         * Remove `create_term` and `wp_insert_post` action created by plugin
+         * to prevent creating duplicates
          * 
          * @since v1.0.1
          */
         remove_action( 'create_term', array( Code_IT_WPML_Translator::class, 'create_term_translation_job' ), 10, 1 );
-        /**
-         * Remove `create_term` action created by plugin
-         * to prevent creating duplicate posts
-         * 
-         * @since v1.0.1
-         */
-        remove_action( 'wp_insert_post', array( Code_IT_WPML_Translator::class, 'create_post_translation_job' ), 10, 2 );
+        remove_action( 'wp_after_insert_post', array( Code_IT_WPML_Translator::class, 'create_post_translation_job' ), 10, 2 );
         /**
          * Start translating the WordPress object
          * This can be either WP_Post or WP_Term object
@@ -228,12 +222,16 @@ class Code_IT_WPML_Translator
         return new Code_IT_WPML_Post( $this->object->ID, $this->source_language, $this->target_language, $this->language_args['language_code'] );
     }
 
-    protected function fill(): void
+    protected function fill(): bool
     {
         $this->element_id = $this->object->term_taxonomy_id ?? $this->object->ID;
         $this->element_type = apply_filters( 'wpml_element_type', $this->object->taxonomy ?? 'post' );
         $this->language_info = get_element_language_details( $this->object->term_taxonomy_id ?? $this->object->ID, $this->object->taxonomy ?? 'post' );
-        
+
+        if( ! $this->language_info ) {
+            return false;
+        }
+
         $this->language_args = array(
             'element_id'            => null,                                // Fill this when translation job starts
             'element_type'          => $this->element_type,
@@ -241,6 +239,8 @@ class Code_IT_WPML_Translator
             'language_code'         => '',                                  // Fill this when translation job starts
             'source_language_code'  => $this->language_info->language_code
         );
+
+        return true;
     }
 
     public static function create_term_translation_job( int $term_id ): Code_IT_WPML_Translator

@@ -5,9 +5,9 @@
  * @param int       $element_id
  * @param string    $element_type
  *
- * @return stdClass
+ * @return stdClass|null|bool
  */
-function get_element_language_details( int $element_id, string $element_type ): stdClass
+function get_element_language_details( int $element_id, string $element_type ): bool|stdClass|null
 {
     return apply_filters( 'wpml_element_language_details', null, array('element_id' => $element_id, 'element_type' => $element_type ) );
 }
